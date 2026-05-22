@@ -228,12 +228,16 @@ def dvc_push(version: int) -> str:
 # ==================================================
 
 def clear_outputs():
-    shutil.rmtree(OUTPUT_IMAGES)
-    shutil.rmtree(OUTPUT_LABELS)
+    if os.path.exists(OUTPUT_IMAGES):
+        shutil.rmtree(OUTPUT_IMAGES)
+    if os.path.exists(OUTPUT_LABELS):
+        shutil.rmtree(OUTPUT_LABELS)
+
     os.makedirs(OUTPUT_IMAGES, exist_ok=True)
     os.makedirs(OUTPUT_LABELS, exist_ok=True)
-    print("  ✅ Output folder cleared")
 
+    print("  ✅ Output folder cleared")
+    
 # ==================================================
 # MAIN
 # ==================================================
@@ -247,17 +251,22 @@ if __name__ == "__main__":
     else:
         version = get_next_version()
         print(f"\n🔖 Creating retrain_v{version}...")
+
         try:
             create_dataset(version)
             generate_dataset_yaml(version)
             update_params(version)
             tag = dvc_push(version)
-            clear_outputs()
+
             print(f"\n{'='*50}")
             print(f"  ✅ Dataset v{version} ready")
             print(f"  🏷  Tag     : {tag}")
             print(f"  🚀  GitHub Actions retraining triggered")
             print(f"{'='*50}")
+
         except Exception as e:
             print(f"\n❌ Error: {e}")
             raise
+
+        finally:
+            clear_outputs()

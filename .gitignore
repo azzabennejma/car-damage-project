@@ -14,8 +14,9 @@ data/raw/test/
 # Generated outputs
 data/outputs/
 
-# Ignore processed datasets
-data/processed/*
+# ignore actual dataset files (DVC will manage them)
+data/processed/*/train/
+data/processed/*/val/
 
 # BUT allow metadata
 !data/processed/**/*.dvc
