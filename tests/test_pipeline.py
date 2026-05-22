@@ -13,7 +13,7 @@ def test_params_structure():
     assert "data_yaml" in p["train"]
 
 def test_requirements_exists():
-    assert os.path.exists("backend/requirements.txt")
+    assert os.path.exists("requirements.txt")
 
 def test_dvc_yaml_exists():
     assert os.path.exists("dvc.yaml")
