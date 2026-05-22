@@ -189,31 +189,36 @@ def update_params(version: int):
 # ==================================================
 
 def dvc_push(version: int) -> str:
-    processed_folder = f"data/processed/retrain_v{version}/train"
-    current_date     = datetime.now().strftime("%Y-%m-%d")
-    tag              = f"data.v{version}_{current_date}"
+    base_folder = f"data/processed/retrain_v{version}/train"
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    tag = f"data.v{version}_{current_date}"
 
+    # ✅ correct: track ONLY train folder
     run_cmd(
-        ["dvc", "add", f"{processed_folder}/train"],
+        ["dvc", "add", base_folder],
         f"DVC tracking train set for retrain_v{version}"
     )
+
     run_cmd([
         "git", "add",
-        f"{processed_folder}/train.dvc",
+        f"{base_folder}.dvc",
         PARAMS_PATH,
-        f"{processed_folder}/dataset.yaml",
+        f"data/processed/retrain_v{version}/dataset.yaml",
     ], "Staging files")
+
     run_cmd([
         "git", "commit", "-m",
         f"data: retrain_v{version} on {current_date}"
     ], "Committing")
+
     run_cmd([
         "git", "tag", "-a", tag, "-m",
         f"Dataset version {version} — triggers retraining"
     ], f"Creating tag {tag}")
+
     run_cmd(["dvc", "push", "-j", "1"], "Pushing to DVC remote")
     run_cmd(["git", "push", "origin", "main"], "Pushing commit")
-    run_cmd(["git", "push", "origin", tag],    "Pushing tag → triggers GitHub Actions")
+    run_cmd(["git", "push", "origin", tag], "Pushing tag → triggers GitHub Actions")
 
     print(f"\n🚀 Tag {tag} pushed — GitHub Actions will trigger retraining")
     return tag
