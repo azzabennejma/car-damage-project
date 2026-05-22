@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: car_damage_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount model file from your machine into container
+      - ./backend/model/best.pt:/app/model/best.pt
+      # Persist outputs and uploads on your machine
+      - ./backend/outputs:/app/outputs
+      - ./backend/uploads:/app/uploads
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend2/vite-project
+      dockerfile: Dockerfile
+    container_name: car_damage_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

@@ -1,0 +1,50 @@
+# Python
+backend/__pycache__/
+backend/venv/
+
+# Model weights (tracked by DVC)
+backend/model/best.pt
+
+# Data folders
+data/raw/train/images/
+data/raw/train/labels/
+data/raw/val/
+data/raw/test/
+
+# Generated outputs
+data/outputs/
+
+# Ignore processed datasets
+data/processed/*
+
+# BUT allow metadata
+!data/processed/**/*.dvc
+!data/processed/**/.gitignore
+!data/processed/**/dataset.yaml
+
+# Outputs
+backend/uploads/
+
+# Training runs
+runs/
+
+# Model weights
+*.pt
+
+# DVC local storage
+dvc-storage/
+
+# Cache files
+*.cache
+
+# Dataset images/labels (tracked by DVC)
+data/raw/train/images_v0_set/
+data/raw/train/images_v1_set/
+
+*.cache
+backend/uploads/*
+!backend/uploads/.gitkeep
+venv/
+__pycache__/
+*.pyc
+.env

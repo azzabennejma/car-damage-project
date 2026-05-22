@@ -1,0 +1,5 @@
+train: C:/Users/azzab/Desktop/car_damage_api/data/raw/train/images
+val: C:/Users/azzab/Desktop/car_damage_api/data/raw/val/images
+test: C:/Users/azzab/Desktop/car_damage_api/data/raw/test/images
+nc: 6
+names: ['dent', 'scratch', 'crack', 'glass shatter', 'lamp broken', 'tire flat']

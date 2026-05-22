@@ -1,0 +1,30 @@
+stages:
+  train:
+    cmd: python src/train.py
+    deps:
+      - src/train.py
+      - data/processed
+    params:
+      - train.epochs
+      - train.batch_size
+      - train.imgsz
+      - train.lr0
+      - train.lrf
+      - train.optimizer
+      - train.data_yaml
+    outs:
+      - models/best.pt
+    metrics:
+      - metrics/results.json:
+          cache: false
+
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+      - model/best.pt
+      - src/evaluate.py
+    params:
+      - train.data_yaml
+    metrics:
+      - metrics/eval.json:
+          cache: false

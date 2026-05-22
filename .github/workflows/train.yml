@@ -1,0 +1,75 @@
+name: CD — Retrain on New Data Version
+
+on:
+  push:
+    tags:
+      - "data.v*"
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+      - name: Debug — show working directory
+        run: |
+          echo "Current directory:"
+          pwd
+          echo ""
+          echo "Files in root:"
+          ls -la
+          echo ""
+          echo "Looking for requirements.txt:"
+          find . -name "requirements.txt"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Configure DVC remote
+        run: |
+          dvc remote modify --local myremote connection_string \
+            "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
+
+      - name: Pull data from DVC remote
+        run: dvc pull
+
+      - name: Train model (5 epochs — CPU test)
+        run: python src/train.py
+
+      - name: Evaluate model
+        run: python src/evaluate.py
+
+      - name: Push model to DVC remote
+        run: dvc push
+
+      - name: Commit metrics
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name  "GitHub Actions"
+          git add metrics/
+          git diff --cached --quiet || git commit -m "ci: metrics after ${{ github.ref_name }} [skip ci]"
+          git push origin HEAD:main
+
+      - name: Print summary
+        run: |
+          echo "=================================="
+          echo " Tag   : ${{ github.ref_name }}"
+          echo " Device: CPU"
+          echo " Epochs: 5"
+          echo "=================================="
+          cat metrics/results.json
+          echo "=================================="
