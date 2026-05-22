@@ -39,17 +39,17 @@ jobs:
       - name: Install full dependencies
         run: |
           pip install -r requirements.txt
-          
+
       - name: Install DVC
-        run: pip install dvc
+        run: pip install "dvc[azure]"
 
       - name: Configure DVC remote
         run: |
-          dvc remote modify --local myremote connection_string \
+          python -m dvc remote modify --local myremote connection_string \
             "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
 
       - name: Pull data from DVC remote
-        run: dvc pull
+        run: python -m dvc pull
 
       - name: Train model (5 epochs — CPU test)
         run: python src/train.py
@@ -58,7 +58,7 @@ jobs:
         run: python src/evaluate.py
 
       - name: Push model to DVC remote
-        run: dvc push
+        run: python -m dvc push
 
       - name: Commit metrics
         run: |
