@@ -5,6 +5,7 @@ import random
 import subprocess
 import numpy as np
 import yaml
+import re
 
 from pathlib import Path
 from datetime import datetime
@@ -66,14 +67,15 @@ def count_images() -> int:
 def get_next_version() -> int:
     if not os.path.exists(PROCESSED_DIR):
         return 1
-    existing = [
-        d for d in os.listdir(PROCESSED_DIR)
-        if d.startswith("retrain_v")
-    ]
-    if not existing:
-        return 1
-    versions = [int(d.split("_v")[1]) for d in existing]
-    return max(versions) + 1
+
+    versions = []
+
+    for d in os.listdir(PROCESSED_DIR):
+        match = re.match(r"retrain_v(\d+)$", d)
+        if match:
+            versions.append(int(match.group(1)))
+
+    return max(versions) + 1 if versions else 1
 
 # ==================================================
 # PREPROCESSING
