@@ -2,9 +2,8 @@ name: CI — Tests
 
 on:
   push:
-    branches: [main, dev]
-  pull_request:
-    branches: [main]
+    tags:
+      - "data.v*"
 
 jobs:
   test:
