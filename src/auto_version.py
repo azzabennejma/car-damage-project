@@ -187,7 +187,7 @@ def update_params(version: int):
 # ==================================================
 
 def dvc_push(version: int) -> str:
-    processed_folder = f"data/processed/retrain_v{version}"
+    processed_folder = f"data/processed/retrain_v{version}/train"
     current_date     = datetime.now().strftime("%Y-%m-%d")
     tag              = f"data.v{version}_{current_date}"
 
