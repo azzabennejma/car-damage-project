@@ -47,3 +47,5 @@ ultralytics-thop==2.0.18
 urllib3==2.6.3
 uvicorn==0.41.0
 pytest
+dvc
+dvc-azure
