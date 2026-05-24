@@ -41,11 +41,10 @@ jobs:
 
       - name: Configure DVC remote
         run: |
-          python -m dvc remote modify --local myremote connection_string \
-            "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
+          python -m dvc remote modify --local azure_remote connection_string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}""
 
       - name: Pull data from DVC remote
-        run: python -m dvc pull
+        run: python -m dvc pull -r azure_remote
 
       - name: Train model (5 epochs — CPU test)
         run: python src/train.py
@@ -54,7 +53,7 @@ jobs:
         run: python src/evaluate.py
 
       - name: Push model to DVC remote
-        run: python -m dvc push
+        run: python -m dvc push -r azure_remote
 
       - name: Commit metrics
         run: |
