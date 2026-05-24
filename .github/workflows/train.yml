@@ -34,12 +34,8 @@ jobs:
           ls -la
           echo ""
           echo "Looking for requirements.txt:"
-          find . -name "requirements.txt"
+          find . -name "requirements.txt"    
 
-      - name: Install DVC
-        run: pip install "dvc[azure]"
-          echo "===== CHECK DVC =====" python -m dvc version     
-          
       - name: Install full dependencies
         run: pip install -r requirements.txt
 
