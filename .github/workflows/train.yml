@@ -1,7 +1,6 @@
 name: CD — Retrain on New Data Version
 
 on:
-  workflow_dispatch:
   push:
     tags:
       - "data.v*"
