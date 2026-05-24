@@ -40,7 +40,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-
+      - name: Verify installed packages
+        run: |
+          pip list | grep dvc
       - name: Configure DVC remote
         run: |
           python -m dvc remote modify --local myremote connection_string \
