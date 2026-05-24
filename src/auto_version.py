@@ -5,6 +5,7 @@ import random
 import subprocess
 import numpy as np
 import re
+import uuid
 
 from pathlib import Path
 from datetime import datetime
@@ -17,7 +18,7 @@ OUTPUT_IMAGES = "data/outputs/images"
 OUTPUT_LABELS = "data/outputs/labels"
 
 PROCESSED_DIR = "data/processed"
-
+SUCCESS_FILE = "data/LATEST_SUCCESS"
 THRESHOLD = 10
 TRAIN_RATIO = 0.8
 
@@ -75,21 +76,20 @@ def count_images():
 # SAFE VERSION DETECTION
 # ==================================================
 
+SUCCESS_FILE = "data/LATEST_SUCCESS"
+
 def get_next_version():
 
-    if not os.path.exists(PROCESSED_DIR):
+    if not os.path.exists(SUCCESS_FILE):
         return 1
 
-    versions = []
+    with open(SUCCESS_FILE, "r") as f:
+        last_success = f.read().strip()
 
-    for item in os.listdir(PROCESSED_DIR):
+    if not last_success.isdigit():
+        return 1
 
-        match = re.match(r"retrain_v(\d+)$", item)
-
-        if match:
-            versions.append(int(match.group(1)))
-
-    return max(versions) + 1 if versions else 1
+    return int(last_success) + 1
 
 # ==================================================
 # IMAGE PREPROCESSING
@@ -252,11 +252,13 @@ def create_dataset(version):
 
 def dvc_push(version):
 
-    processed_folder = f"data/processed/retrain_v{version}/train"
+    processed_folder = f"data/processed/retrain_v{version}"
 
-    current_date = datetime.now().strftime("%Y-%m-%d")
+    current_date = datetime.now().strftime("%Y-%m-%d_%H%M%S")
 
-    tag = f"data.v{version}_{current_date}"
+    unique_id = uuid.uuid4().hex[:6]
+
+    tag = f"data.v{version}_{current_date}_{unique_id}"
 
     # DVC track whole dataset version
     run_cmd(
@@ -266,18 +268,23 @@ def dvc_push(version):
 
     # Stage files
     run_cmd([
-        "git",
-        "add",
-        f"{processed_folder}/train.dvc",
-        f"{processed_folder}/dataset.yaml"
-    ], "Staging files")
 
+        "git", "add",
+        f"{processed_folder}.dvc",
+    ], "Staging DVC file")
+
+    run_cmd([
+         
+        "git", "add", "-f",
+        f"{processed_folder}/dataset.yaml",
+    ], "Force staging dataset config")
+ 
     # Commit
     run_cmd([
         "git",
         "commit",
         "-m",
-        f"data: retrain_v{version}/train"
+        f"data: retrain_v{version}"
     ], "Git commit")
 
     # Create tag
@@ -287,7 +294,7 @@ def dvc_push(version):
         "-a",
         tag,
         "-m",
-        f"Dataset version {version}/train"
+        f"Dataset version {version}"
     ], f"Creating tag {tag}")
 
     # Push DVC cache
