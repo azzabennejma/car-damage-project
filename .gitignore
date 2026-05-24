@@ -2,56 +2,39 @@
 backend/__pycache__/
 backend/venv/
 
-# Model weights (tracked by DVC)
+# Model weights
 backend/model/best.pt
+*.pt
 
-# Data folders
+# Raw dataset
 data/raw/train/images/
 data/raw/train/labels/
 data/raw/val/
 data/raw/test/
 
-# Generated outputs
-data/outputs/
-
-# ignore actual dataset files (DVC will manage them)
-data/processed/*/train/
-data/processed/*/val/
-# Ignore processed dataset contents
-data/processed/**
-
-# BUT allow DVC files
-!data/processed/*.dvc
-
-# Allow dataset configs
-!data/processed/**/dataset.yaml
-# BUT allow metadata
-!data/processed/**/*.dvc
-!data/processed/**/.gitignore
-!data/processed/**/dataset.yaml
-
 # Outputs
-backend/uploads/
+data/outputs/
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Processed datasets
+data/processed/retrain_v*/train/
+data/processed/retrain_v*/val/
+
+# Keep DVC metadata
+!data/processed/*.dvc
+!data/processed/**/dataset.yaml
 
 # Training runs
 runs/
 
-# Model weights
-*.pt
-
 # DVC local storage
 dvc-storage/
 
-# Cache files
+# Cache
 *.cache
 
-# Dataset images/labels (tracked by DVC)
-data/raw/train/images_v0_set/
-data/raw/train/images_v1_set/
-
-*.cache
-backend/uploads/*
-!backend/uploads/.gitkeep
+# Virtual env
 venv/
 __pycache__/
 *.pyc
