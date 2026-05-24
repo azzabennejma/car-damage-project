@@ -55,7 +55,7 @@ jobs:
 
       - name: Push model to DVC remote
         run: python -m dvc push -r azure_remote
-            - name: Mark dataset as successful
+      - name: Mark dataset as successful
         run: |
           VERSION=$(echo "${GITHUB_REF_NAME}" | sed -E 's/data\.v([0-9]+).*/\1/')
           echo $VERSION > data/LATEST_SUCCESS
