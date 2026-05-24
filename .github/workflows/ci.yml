@@ -3,7 +3,7 @@ name: CI — Tests
 on:
   push:
     tags:
-      - "data.v*"
+      - "test.v*"
 
 jobs:
   test:
