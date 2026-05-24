@@ -39,9 +39,12 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
-      - name: Verify installed packages
-        run: |
+
+          pip install -r requirements.txt
+
+          pip install dvc
+          pip install dvc-azure
+
           pip list | grep dvc
       - name: Configure DVC remote
         run: |
