@@ -60,8 +60,12 @@ with open("metrics/results.json", "w") as f:
     json.dump(metrics, f, indent=2)
 
 # Save model
-run_weights = f"runs/retrain_v{p['data_version']}/weights/best.pt"
-shutil.copy(run_weights, "model/best.pt")
+best_model_path = results.save_dir + "/weights/best.pt"
+
+if not os.path.exists(best_model_path):
+    raise FileNotFoundError(f"Model not found at {best_model_path}")
+
+shutil.copy(best_model_path, "model/best.pt")
 
 print("\n✅ Training complete")
 for k, v in metrics.items():

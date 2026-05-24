@@ -13,7 +13,7 @@ stages:
       - train.optimizer
       - train.data_yaml
     outs:
-      - model/best.pt
+      - models/best.pt
     metrics:
       - metrics/results.json:
           cache: false
@@ -21,7 +21,7 @@ stages:
   evaluate:
     cmd: python src/evaluate.py
     deps:
-      - model/best.pt
+      - models/best.pt
       - src/evaluate.py
     params:
       - train.data_yaml
