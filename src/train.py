@@ -61,7 +61,7 @@ with open("metrics/results.json", "w") as f:
 
 # Save model
 run_weights = f"runs/retrain_v{p['data_version']}/weights/best.pt"
-shutil.copy(run_weights, "models/best.pt")
+shutil.copy(run_weights, "model/best.pt")
 
 print("\n✅ Training complete")
 for k, v in metrics.items():

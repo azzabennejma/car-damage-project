@@ -6,7 +6,7 @@ from ultralytics import YOLO
 with open("params.yaml") as f:
     p = yaml.safe_load(f)
 
-model       = YOLO("models/best.pt")
+model       = YOLO("model/best.pt")
 val_results = model.val(data=p["train"]["data_yaml"], verbose=False)
 
 metrics = {
