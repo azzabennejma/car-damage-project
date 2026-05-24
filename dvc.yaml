@@ -13,7 +13,7 @@ stages:
       - train.optimizer
       - train.data_yaml
     outs:
-      - models/best.pt
+      - model/best.pt
     metrics:
       - metrics/results.json:
           cache: false
