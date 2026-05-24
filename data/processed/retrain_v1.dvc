@@ -1,0 +1,6 @@
+outs:
+- md5: d8a87a67eed261180fff78f7d01fa07f.dir
+  size: 1224386
+  nfiles: 21
+  hash: md5
+  path: retrain_v1
