@@ -252,7 +252,7 @@ def create_dataset(version):
 
 def dvc_push(version):
 
-    processed_folder = f"data/processed/retrain_v{version}"
+    processed_folder = f"data/processed/retrain_v{version}/train"
 
     current_date = datetime.now().strftime("%Y-%m-%d")
 
@@ -268,7 +268,7 @@ def dvc_push(version):
     run_cmd([
         "git",
         "add",
-        f"{processed_folder}.dvc",
+        f"{processed_folder}/train.dvc",
         f"{processed_folder}/dataset.yaml"
     ], "Staging files")
 
@@ -277,7 +277,7 @@ def dvc_push(version):
         "git",
         "commit",
         "-m",
-        f"data: retrain_v{version}"
+        f"data: retrain_v{version}/train"
     ], "Git commit")
 
     # Create tag
@@ -287,7 +287,7 @@ def dvc_push(version):
         "-a",
         tag,
         "-m",
-        f"Dataset version {version}"
+        f"Dataset version {version}/train"
     ], f"Creating tag {tag}")
 
     # Push DVC cache
