@@ -17,7 +17,14 @@ data/outputs/
 # ignore actual dataset files (DVC will manage them)
 data/processed/*/train/
 data/processed/*/val/
+# Ignore processed dataset contents
+data/processed/**
 
+# BUT allow DVC files
+!data/processed/*.dvc
+
+# Allow dataset configs
+!data/processed/**/dataset.yaml
 # BUT allow metadata
 !data/processed/**/*.dvc
 !data/processed/**/.gitignore
