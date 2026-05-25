@@ -3,7 +3,7 @@ backend/__pycache__/
 backend/venv/
 
 # Model weights
-backend/model/best.pt
+model/best.pt
 *.pt
 
 # Raw dataset
