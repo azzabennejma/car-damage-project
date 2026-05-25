@@ -60,10 +60,10 @@ with open("metrics/results.json", "w") as f:
     json.dump(metrics, f, indent=2)
 
 # Save model
-best_model_path = results.save_dir + "/weights/best.pt"
+best_model_path = results.save_dir / "weights" / "best.pt"
 
-if not os.path.exists(best_model_path):
-    raise FileNotFoundError(f"Model not found at {best_model_path}")
+if not best_model_path.exists():
+    raise FileNotFoundError(f"Model not found: {best_model_path}")
 
 shutil.copy(best_model_path, "model/best.pt")
 
