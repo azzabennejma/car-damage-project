@@ -60,13 +60,14 @@ with open("metrics/results.json", "w") as f:
     json.dump(metrics, f, indent=2)
 
 # Save model
-# Save model (CORRECT WAY)
-best_model_path = model.best
+best_model_path = os.path.join(results.save_dir, "weights", "best.pt")
 
-if best_model_path is None or not best_model_path.exists():
+if not os.path.exists(best_model_path):
     raise FileNotFoundError(f"Model not found: {best_model_path}")
 
 shutil.copy(best_model_path, "model/best.pt")
+print("SAVE DIR:", results.save_dir)
+print("FILES:", os.listdir(results.save_dir))
 
 print("\n✅ Training complete")
 for k, v in metrics.items():
