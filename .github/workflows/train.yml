@@ -5,7 +5,9 @@ on:
   push:
     tags:
       - "data.v*"
-
+permissions:
+  contents: write
+  
 jobs:
   retrain:
     runs-on: ubuntu-latest
