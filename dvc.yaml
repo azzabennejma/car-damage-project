@@ -1,9 +1,12 @@
 stages:
+
   train:
     cmd: python src/train.py
     deps:
       - src/train.py
       - data/processed
+      - params.yaml
+
     params:
       - train.epochs
       - train.batch_size
@@ -12,26 +15,46 @@ stages:
       - train.lrf
       - train.optimizer
       - train.data_yaml
+      - data_version
+
     outs:
-      - model/model_v${data_version}.pt
+      - model_versions
+
     metrics:
       - metrics/results.json:
           cache: false
 
+
   evaluate:
     cmd: python src/evaluate.py
+
     deps:
-      - model/model_v${data_version}.pt
       - src/evaluate.py
+      - model/best.pt
+
     params:
       - train.data_yaml
+
     metrics:
       - metrics/eval.json:
           cache: false
+
+
   select_best_model:
     cmd: python src/select_best_model.py
+
     deps:
-      - metrics/results.json
-      - model/best.pt
-      - model/model_v${data_version}.pt
       - src/select_best_model.py
+      - metrics/results.json
+      - model_versions
+
+    # outs means this stage CREATES or UPDATES this file
+    # select_best_model.py updates the production model
+    # by copying the best candidate model into model/best.pt
+    outs:
+      - model/best.pt
+
+    metrics:
+      - model/best_score.txt:
+          cache: false
+

@@ -39,6 +39,7 @@ results = model.train(
     name      = f"retrain_v{p['data_version']}",
     patience  = 20,
     plots     = True,
+    augment   =True,
     exist_ok  = True,
 )
 
@@ -82,21 +83,32 @@ if not os.path.exists(best_model_path):
 # Current dataset version
 current_version = p["data_version"]
 
-# Save as model_vX.pt
-new_model_path = f"model/model_v{current_version}.pt"
+# ==================================================
+# SAVE TRAINED MODEL VERSION
+# ==================================================
+
+version = p["data_version"]
+
+save_folder = f"model_versions/v{version}"
+
+os.makedirs(save_folder, exist_ok=True)
+
+best_model_path = os.path.join(
+    results.save_dir,
+    "weights",
+    "best.pt"
+)
+
+if not os.path.exists(best_model_path):
+    raise FileNotFoundError(
+        f"Model not found: {best_model_path}"
+    )
+
+new_model_path = os.path.join(
+    save_folder,
+    "best.pt"
+)
 
 shutil.copy(best_model_path, new_model_path)
 
-print(f"\n✅ Saved model: {new_model_path}")
-
-print("SAVE DIR:", results.save_dir)
-print("FILES:", os.listdir(results.save_dir))
-
-# ==================================================
-# TRAINING SUMMARY
-# ==================================================
-
-print("\n✅ Training complete")
-
-for k, v in metrics.items():
-    print(f"   {k:<15}: {v}")
+print(f"\n✅ Saved new model to: {new_model_path}")

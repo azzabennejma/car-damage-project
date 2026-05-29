@@ -19,7 +19,7 @@ OUTPUT_LABELS = "data/outputs/labels"
 
 PROCESSED_DIR = "data/processed"
 SUCCESS_FILE = "data/LATEST_SUCCESS"
-THRESHOLD = 10
+THRESHOLD = 50
 TRAIN_RATIO = 0.8
 
 IMG_SIZE = (640, 640)
