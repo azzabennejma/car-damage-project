@@ -252,7 +252,8 @@ def create_dataset(version):
 
 def dvc_push(version):
 
-    processed_folder = f"data/processed/retrain_v{version}"
+    train_folder = f"data/processed/retrain_v{version}/train"
+    yaml_file = f"data/processed/retrain_v{version}/dataset.yaml"
 
     current_date = datetime.now().strftime("%Y-%m-%d_%H%M%S")
 
@@ -262,21 +263,26 @@ def dvc_push(version):
 
     # DVC track whole dataset version
     run_cmd(
-        ["dvc", "add", processed_folder],
-        f"DVC tracking {processed_folder}"
+    ["dvc", "add", train_folder],
+    "DVC tracking train folder"
+    )
+
+    run_cmd(
+    ["dvc", "add", yaml_file],
+    "DVC tracking dataset yaml"
     )
 
     # Stage files
     run_cmd([
 
         "git", "add",
-        f"{processed_folder}.dvc",
+        f"{train_folder}.dvc",
     ], "Staging DVC file")
 
     run_cmd([
          
         "git", "add", "-f",
-        f"{processed_folder}/dataset.yaml",
+        f"{yaml_file}",
     ], "Force staging dataset config")
  
     # Commit
