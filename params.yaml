@@ -4,7 +4,7 @@ model_version: 0
 train:
   batch_size: 4
   data_yaml: data/processed/retrain_v1/dataset.yaml
-  epochs: 20
+  epochs: 5
   imgsz: 640
   lr0: 0.0001
   lrf: 0.0001

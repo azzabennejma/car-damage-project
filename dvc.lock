@@ -5,17 +5,17 @@ stages:
     deps:
     - path: data/processed
       hash: md5
-      md5: 64941428bb642ef316d8293c15a34adf.dir
-      size: 1322231
-      nfiles: 26
+      md5: 10c57f8bf64924f611db0a3e70bb683b.dir
+      size: 6079358
+      nfiles: 134
     - path: params.yaml
       hash: md5
-      md5: caf12cb0e4e358100b95c727328f87a6
-      size: 223
+      md5: f6831acbeb722271b4e6c662267fd6bd
+      size: 225
     - path: src/train.py
       hash: md5
-      md5: be219e91e1cf594bd77687d64c13b858
-      size: 3029
+      md5: 331a168c1cf95b607a7eb8e07bf1d3f3
+      size: 3051
     params:
       params.yaml:
         data_version: 1
@@ -23,17 +23,17 @@ stages:
         train.data_yaml: data/processed/retrain_v1/dataset.yaml
         train.epochs: 5
         train.imgsz: 640
-        train.lr0: 0.01
-        train.lrf: 0.01
+        train.lr0: 0.001
+        train.lrf: 0.001
         train.optimizer: SGD
     outs:
     - path: metrics/results.json
       hash: md5
-      md5: 24b5bef0e3422756077b800a7d8fc4cf
-      size: 163
+      md5: 067c4d74de84a95864794a27bd5440a8
+      size: 166
     - path: model_versions
       hash: md5
-      md5: 8660da44acc5b566a4a9495a064a2504.dir
+      md5: b52ed7f29ffcabf5135cdc82e9e9a933.dir
       size: 22516586
       nfiles: 1
   select_best_model:
@@ -41,11 +41,11 @@ stages:
     deps:
     - path: metrics/results.json
       hash: md5
-      md5: 24b5bef0e3422756077b800a7d8fc4cf
-      size: 163
+      md5: 067c4d74de84a95864794a27bd5440a8
+      size: 166
     - path: model_versions
       hash: md5
-      md5: 8660da44acc5b566a4a9495a064a2504.dir
+      md5: b52ed7f29ffcabf5135cdc82e9e9a933.dir
       size: 22516586
       nfiles: 1
     - path: src/select_best_model.py
@@ -55,18 +55,18 @@ stages:
     outs:
     - path: model/best.pt
       hash: md5
-      md5: 5a970f248740a9f076898550152a8702
+      md5: eb4a8061d50454a9484cc48f947be89b
       size: 22516586
     - path: model/best_score.txt
       hash: md5
-      md5: 6c29c1d39cdc620026b1be092ca3adb7
+      md5: ad511ef2c294177227c8aee810b206e4
       size: 6
   evaluate:
     cmd: python src/evaluate.py
     deps:
     - path: model/best.pt
       hash: md5
-      md5: 5a970f248740a9f076898550152a8702
+      md5: eb4a8061d50454a9484cc48f947be89b
       size: 22516586
     - path: src/evaluate.py
       hash: md5
@@ -78,5 +78,5 @@ stages:
     outs:
     - path: metrics/eval.json
       hash: md5
-      md5: ae1f57de86fcd05f7e1a52bc80f8df08
-      size: 46
+      md5: 6a3ae0c04dad3ec96615b80d4d559bd9
+      size: 45

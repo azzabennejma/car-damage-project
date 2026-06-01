@@ -41,7 +41,7 @@ if os.path.exists(BEST_SCORE_FILE):
         best_map = float(f.read().strip())
 
 else:
-    best_map = 0.0
+    best_map = 0.74
 
 print(f"\nCurrent BEST mAP50 : {best_map}")
 print(f"New model mAP50    : {new_map}")
@@ -53,6 +53,7 @@ print(f"New model mAP50    : {new_map}")
 if new_map > best_map:
 
     shutil.copy(NEW_MODEL, BEST_MODEL)
+    
 
     with open(BEST_SCORE_FILE, "w") as f:
         f.write(str(new_map))
@@ -61,3 +62,13 @@ if new_map > best_map:
 
 else:
     print("\n❌ New model rejected")
+    
+import mlflow
+
+mlflow.set_experiment("Car Damage Detection")
+
+with mlflow.start_run():
+
+    mlflow.log_metric("best_mAP50", new_map)
+
+    mlflow.log_artifact(BEST_MODEL)
