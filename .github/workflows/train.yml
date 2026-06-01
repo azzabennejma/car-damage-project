@@ -46,8 +46,11 @@ jobs:
         run: |
           python -m dvc remote modify --local azure_remote connection_string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
 
-      - name: Pull data from DVC remote
-        run: dvc pull -r azure_remote
+      - name: Pull data and model
+        run: |
+          python -m dvc pull data/processed/retrain_v1/train.dvc -r azure_remote --force
+          python -m dvc pull model/best.pt.dvc -r azure_remote --force
+             
 
       - name: Train model (5 epochs — CPU test)
         run: python src/train.py
