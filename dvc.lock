@@ -5,17 +5,17 @@ stages:
     deps:
     - path: data/processed
       hash: md5
-      md5: 10c57f8bf64924f611db0a3e70bb683b.dir
-      size: 6079358
-      nfiles: 134
+      md5: 4cf1b952b86af8705fa0b251225e2893.dir
+      size: 7421582
+      nfiles: 148
     - path: params.yaml
       hash: md5
-      md5: f6831acbeb722271b4e6c662267fd6bd
-      size: 225
+      md5: 0793dd8a8dfb29c8b936102fef346e59
+      size: 227
     - path: src/train.py
       hash: md5
-      md5: 331a168c1cf95b607a7eb8e07bf1d3f3
-      size: 3051
+      md5: fc4382553ce098537cea725a8fb38811
+      size: 6985
     params:
       params.yaml:
         data_version: 1
@@ -23,17 +23,17 @@ stages:
         train.data_yaml: data/processed/retrain_v1/dataset.yaml
         train.epochs: 5
         train.imgsz: 640
-        train.lr0: 0.001
-        train.lrf: 0.001
+        train.lr0: 0.0001
+        train.lrf: 0.0001
         train.optimizer: SGD
     outs:
     - path: metrics/results.json
       hash: md5
-      md5: 067c4d74de84a95864794a27bd5440a8
+      md5: 73ae6a5ebdca456e0c2c2af18a993e86
       size: 166
     - path: model_versions
       hash: md5
-      md5: b52ed7f29ffcabf5135cdc82e9e9a933.dir
+      md5: ea473eadbb776f4b8bd8edcea303ab5c.dir
       size: 22516586
       nfiles: 1
   select_best_model:

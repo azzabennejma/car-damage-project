@@ -42,18 +42,11 @@ stages:
 
   select_best_model:
     cmd: python src/select_best_model.py
-
     deps:
       - src/select_best_model.py
       - metrics/results.json
       - model_versions
-
-    # outs means this stage CREATES or UPDATES this file
-    # select_best_model.py updates the production model
-    # by copying the best candidate model into model/best.pt
-    outs:
-      - model/best.pt
-
+      
     metrics:
       - model/best_score.txt:
           cache: false
