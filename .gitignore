@@ -40,3 +40,15 @@ __pycache__/
 *.pyc
 .env
 /model_versions
+# MLflow
+mlruns/
+mlflow.db
+*.db
+
+# artifacts / training outputs
+runs/
+artifacts/
+results/
+*.png
+*.jpg
+*.csv
