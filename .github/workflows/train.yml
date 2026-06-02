@@ -49,7 +49,9 @@ jobs:
       - name: Pull DVC artifacts
         run: python -m dvc pull -r azure_remote --force
              
-
+      - name: Set MLflow tracking URI
+        run: |
+          echo "MLFLOW_TRACKING_URI=${{ secrets.MLFLOW_TRACKING_URI }}" >> $GITHUB_ENV
       - name: Train model (5 epochs — CPU test)
         run: python src/train.py
 
