@@ -67,7 +67,11 @@ if new_map > best_map:
 else:
     print(f"\n❌ New model rejected — production model unchanged")
     print(f"   Candidate saved at: {CANDIDATE_MODEL}")
-
+    
+# Write promotion result for GitHub Actions
+promoted = new_map > best_map
+with open("model/promoted.txt", "w") as f:
+    f.write("true" if promoted else "false")
 # ==================================================
 # LOG TO MLFLOW
 # ==================================================

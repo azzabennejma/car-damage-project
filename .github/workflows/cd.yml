@@ -1,0 +1,44 @@
+name: CD — Deploy New Model
+
+on:
+  repository_dispatch:
+    types: [deploy_model]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout latest code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Configure DVC remote
+        run: |
+          python -m dvc remote modify --local azure_remote connection_string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
+
+      - name: Pull new model from Azure
+        run: python -m dvc pull model/best.pt.dvc -r azure_remote --force
+
+      - name: Copy model to backend
+        run: cp model/best.pt backend/model/best.pt
+
+      - name: Restart Docker containers
+        run: |
+          docker-compose down
+          docker-compose up --build -d
+
+      - name: Verify deployment
+        run: |
+          sleep 10
+          curl -f http://localhost:8000/health && echo "API is healthy" || echo "API health check failed"
