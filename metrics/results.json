@@ -1,0 +1,10 @@
+{
+  "mAP50": 0.7674,
+  "mAP50_95": 0.6126,
+  "precision": 0.8924,
+  "recall": 0.6959,
+  "F1": 0.782,
+  "data_version": 1,
+  "device": "cpu",
+  "epochs": 20
+}
