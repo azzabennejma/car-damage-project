@@ -30,7 +30,8 @@ stages:
 
     deps:
       - src/evaluate.py
-      - model/best.pt
+      - model_versions
+      - params.yaml
 
     params:
       - train.data_yaml

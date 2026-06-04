@@ -1,4 +1,4 @@
-name: CD — Retrain on New Data Version
+name: CT — Retrain on New Data Version
 
 on:
   workflow_dispatch:
@@ -57,7 +57,9 @@ jobs:
 
       - name: Evaluate model
         run: python src/evaluate.py
-
+      - name: Compare model with production
+        run: python src/select_best_model.py
+        
       - name: Push model to DVC remote
         run: python -m dvc push -r azure_remote
       - name: Mark dataset as successful
@@ -91,3 +93,16 @@ jobs:
           echo "=================================="
           cat metrics/results.json
           echo "=================================="
+      - name: Read promotion result
+        id: promotion
+        run: |
+         echo "PROMOTED=$(cat model/promoted.txt)" >> $GITHUB_ENV
+
+      - name: Trigger deployment
+        if: env.PROMOTED == 'true'
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/dispatches \
+            -d '{"event_type":"deploy_model"}'

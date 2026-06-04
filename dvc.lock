@@ -5,17 +5,17 @@ stages:
     deps:
     - path: data/processed
       hash: md5
-      md5: 4cf1b952b86af8705fa0b251225e2893.dir
-      size: 7421582
-      nfiles: 148
+      md5: 9c177e2e258d6421c000c0fa0c0c14a1.dir
+      size: 7421697
+      nfiles: 149
     - path: params.yaml
       hash: md5
       md5: 0793dd8a8dfb29c8b936102fef346e59
       size: 227
     - path: src/train.py
       hash: md5
-      md5: fc4382553ce098537cea725a8fb38811
-      size: 6985
+      md5: ba2bf590abccc25fe5b670c1525fdc27
+      size: 7210
     params:
       params.yaml:
         data_version: 1
@@ -29,11 +29,11 @@ stages:
     outs:
     - path: metrics/results.json
       hash: md5
-      md5: 73ae6a5ebdca456e0c2c2af18a993e86
+      md5: ce0ae6a06a3bc0d7903b2f6a0569b5ff
       size: 166
     - path: model_versions
       hash: md5
-      md5: ea473eadbb776f4b8bd8edcea303ab5c.dir
+      md5: 52b3b1c748039200ff5b91df5fa88d23.dir
       size: 22516586
       nfiles: 1
   select_best_model:
@@ -64,19 +64,24 @@ stages:
   evaluate:
     cmd: python src/evaluate.py
     deps:
-    - path: model/best.pt
+    - path: model_versions
       hash: md5
-      md5: eb4a8061d50454a9484cc48f947be89b
+      md5: 52b3b1c748039200ff5b91df5fa88d23.dir
       size: 22516586
+      nfiles: 1
+    - path: params.yaml
+      hash: md5
+      md5: 0793dd8a8dfb29c8b936102fef346e59
+      size: 227
     - path: src/evaluate.py
       hash: md5
-      md5: 211eb5837a2e34c4806b062be3deae8a
-      size: 552
+      md5: 51b166dfeff01ef0ac1c1e6bc07f8040
+      size: 873
     params:
       params.yaml:
         train.data_yaml: data/processed/retrain_v1/dataset.yaml
     outs:
     - path: metrics/eval.json
       hash: md5
-      md5: 6a3ae0c04dad3ec96615b80d4d559bd9
-      size: 45
+      md5: 2f6f6e72d7f247aac2c00f41c1559bab
+      size: 46

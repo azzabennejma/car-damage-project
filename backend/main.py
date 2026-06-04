@@ -3,12 +3,17 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from ultralytics import YOLO
+from fastapi import HTTPException
+from dotenv import load_dotenv
+load_dotenv()
+
 import cv2
 import os
 import uuid
 import base64
 import subprocess
 import sys
+import requests
 
 app = FastAPI(title="Car Damage Detection API")
 
@@ -123,6 +128,32 @@ def health():
     return {"status": "ok"}
 
 
+@app.post("/retrain")
+def retrain():
+    token = os.getenv("GITHUB_TOKEN")
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json"
+    }
+
+    payload = {
+        "ref": "main"
+    }
+
+    r = requests.post(
+        "https://api.github.com/repos/azzabennejma/car-damage-project/actions/workflows/train.yml/dispatches",
+        headers=headers,
+        json=payload
+    )
+
+    print("STATUS:", r.status_code)
+    print("RESPONSE:", r.text)
+
+    return {
+        "status": r.status_code,
+        "message": "Workflow triggered" if r.status_code == 204 else r.text
+    }
 @app.post("/outputs/")
 async def upload_file(file: UploadFile = File(...)):
     file_location = f"data/outputs/{file.filename}"

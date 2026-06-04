@@ -117,7 +117,8 @@ export default function CarDamageDetection() {
   const [serverOk, setServerOk]     = useState(null);
   const [history, setHistory]       = useState([]);       // ← stores all past inferences
   const [selectedHistory, setSelectedHistory] = useState(null);
-
+  const [pipelineStatus, setPipelineStatus] = useState("Idle");
+  const [pipelineRunning, setPipelineRunning] = useState(false);
   const inputRef = useRef();
 
   // ── File handling ─────────────────────────────────────────
@@ -209,6 +210,24 @@ export default function CarDamageDetection() {
     setInferTime(item.infer_ms);
     setError(null);
   };
+  const triggerRetrain = async () => {
+  try {
+    setPipelineRunning(true);
+    setPipelineStatus("Starting pipeline...");
+
+    const res = await fetch(`${API_BASE}/retrain`, {
+      method: "POST",
+    });
+
+    const data = await res.json();
+
+    setPipelineStatus(data.message);
+  } catch (err) {
+    setPipelineStatus("Failed");
+  }
+
+  setPipelineRunning(false);
+};
 
   // ── Shared styles ─────────────────────────────────────────
   const card = {
@@ -258,10 +277,12 @@ export default function CarDamageDetection() {
         </div>
 
         {[
+
           { id: "dashboard", label: "Dashboard" },
-          { id: "history",   label: `History${history.length > 0 ? ` (${history.length})` : ""}` },
-          { id: "model",     label: "Model" },
-        ].map((t) => (
+          { id: "history", label: `History${history.length > 0 ? ` (${history.length})` : ""}` },
+          { id: "model", label: "Model" },
+          { id: "mlops", label: "MLOps Pipeline" },
+         ].map((t) => (
           <button key={t.id} onClick={() => setTab(t.id)} style={{
             padding: "5px 14px", borderRadius: 6, border: "none", cursor: "pointer",
             fontSize: 12, fontFamily: "sans-serif",
@@ -712,6 +733,52 @@ export default function CarDamageDetection() {
           </div>
         </div>
       )}
+      {/* ── Model tab ───────────────────────────────────────── */}
+      {tab === "mlops" && (
+  <div style={{ padding: "1rem", flex: 1 }}>
+    <div style={card}>
+      <div style={secTitle}>
+        <div style={titleIcon}>⚙</div>
+        MLOps Pipeline
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "15px",
+        }}
+      >
+
+        <div>
+          Current Status:
+          <strong> {pipelineStatus}</strong>
+        </div>
+
+        <button
+          onClick={triggerRetrain}
+          disabled={pipelineRunning}
+          style={{
+            background: "#1d6ae5",
+            color: "#fff",
+            border: "none",
+            padding: "12px",
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontWeight: 600,
+          }}
+        >
+          {pipelineRunning
+            ? "Starting Pipeline..."
+            : "🚀 Retrain Model"}
+        </button>
+
+      </div>
+    </div>
+  </div>
+)}
+
+     
 
     </div>
   );
