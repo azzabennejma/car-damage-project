@@ -142,7 +142,7 @@ def retrain():
     }
 
     r = requests.post(
-        "https://api.github.com/repos/azzabennejma/car-damage-project/actions/workflows/train.yml/dispatches",
+        "https://api.github.com/repos/azzabennejma/car-damage-project/actions/workflows/ct.yml/dispatches",
         headers=headers,
         json=payload
     )
