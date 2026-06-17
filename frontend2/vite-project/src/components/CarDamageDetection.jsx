@@ -433,7 +433,7 @@ export default function CarDamageDetection() {
                 </div>
               ) : predicted ? (
                 <img src={predicted} alt="Annotated prediction"
-                  style={{ width: "100%", display: "block", borderRadius: 8 }} />
+                  style={{ width: "100%",display: "block", borderRadius: 8 }} />
               ) : (
                 <div style={{ textAlign: "center", color: "#484f58" }}>
                   <div style={{ fontSize: 40, marginBottom: 10 }}>🖼</div>

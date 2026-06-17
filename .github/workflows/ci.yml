@@ -3,7 +3,7 @@ name: CI — Tests
 on:
   push:
     tags:
-      - "test.v*"
+      - "train.v*"
 
 jobs:
   test:
@@ -27,4 +27,14 @@ jobs:
           pip install pytest
 
       - name: Run tests
-        run: python -m pytest tests/ -v
+        run: python -m pytest tests/ -v 
+      - name: Create train tag
+        run: |
+          VERSION=$(echo "${GITHUB_REF_NAME}" | sed -E 's/data\.v([0-9]+).*/\1/')
+          TAG="train.v${VERSION}_$(date +%Y%m%d%H%M%S)"
+
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+
+          git tag $TAG
+          git push origin $TAG  

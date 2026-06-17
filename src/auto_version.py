@@ -6,20 +6,32 @@ import subprocess
 import numpy as np
 import re
 import uuid
+import sys
+import sqlite3
+from pathlib import Path
+
+
+username = sys.argv[1] if len(sys.argv) > 1 else "system"
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.append(str(ROOT))
+
+print("Current working directory:", os.getcwd())
+print("Database path:", os.path.abspath("users.db"))    
 
 from pathlib import Path
 from datetime import datetime
-
+from backend.remove_duplicates import remove_duplicates
 # ==================================================
 # CONFIG
 # ==================================================
+BASE_DIR = Path(__file__).resolve().parent.parent  # project root
 
-OUTPUT_IMAGES = "data/outputs/images"
-OUTPUT_LABELS = "data/outputs/labels"
-
-PROCESSED_DIR = "data/processed"
+PROCESSED_DIR = BASE_DIR / "data" / "processed"
+OUTPUT_IMAGES = BASE_DIR / "data" / "outputs" / "images"
+OUTPUT_LABELS = BASE_DIR / "data" / "outputs" / "labels"
+LOCK_FILE = "data/retrain.lock"
 SUCCESS_FILE = "data/LATEST_SUCCESS"
-THRESHOLD = 55
+THRESHOLD = 60
 TRAIN_RATIO = 0.8
 
 IMG_SIZE = (640, 640)
@@ -79,17 +91,19 @@ def count_images():
 SUCCESS_FILE = "data/LATEST_SUCCESS"
 
 def get_next_version():
+    versions = []
 
-    if not os.path.exists(SUCCESS_FILE):
-        return 1
+    if os.path.exists(PROCESSED_DIR):
+        for folder in os.listdir(PROCESSED_DIR):
+            if folder.startswith("retrain_v"):
+                try:
+                    versions.append(
+                        int(folder.replace("retrain_v", ""))
+                    )
+                except ValueError:
+                    pass
 
-    with open(SUCCESS_FILE, "r") as f:
-        last_success = f.read().strip()
-
-    if not last_success.isdigit():
-        return 1
-
-    return int(last_success) + 1
+    return max(versions, default=0) + 1
 
 # ==================================================
 # IMAGE PREPROCESSING
@@ -122,10 +136,17 @@ def preprocess_image(image_path):
 # ==================================================
 # CREATE YOLO DATASET YAML
 # ==================================================
+def save_success_version(version):
+    with open(SUCCESS_FILE, "w") as f:
+        f.write(str(version))
+def create_dataset_yaml(base_output, version):
 
-def create_dataset_yaml(base_output):
+    os.makedirs(base_output, exist_ok=True)
 
-    yaml_path = os.path.join(base_output, "dataset.yaml")
+    yaml_path = os.path.join(
+        base_output,
+        f"dataset_v{version}.yaml"
+    )
 
     content = f"""
 path: {base_output}
@@ -145,6 +166,40 @@ names:
         f.write(content.strip())
 
     print(f"✅ Created {yaml_path}")
+    import sqlite3
+
+    conn = sqlite3.connect("users.db", check_same_thread=False)
+    print(sqlite3.connect("users.db"))
+
+    cursor = conn.cursor()
+    now = datetime.now()
+
+    cursor.execute("""
+    INSERT INTO dataset_versions(
+        version,
+        username,
+        num_files,
+        upload_date,
+        upload_time
+    )
+    VALUES (?, ?, ?, ?, ?)
+    """, (
+        f"v{version}",
+        username,
+        count_images(),
+        now.strftime("%Y-%m-%d"),
+        now.strftime("%H:%M:%S")
+    ))
+    cursor.execute(
+        "INSERT INTO notifications(message) VALUES (?)",
+        (f" Dataset version {version} created successfully!",)
+    )
+
+    conn.commit()
+    print("✅ Notification inserted")
+    conn.close()
+
+    return yaml_path
 
 # ==================================================
 # CREATE DATASET VERSION
@@ -153,20 +208,24 @@ names:
 def create_dataset(version):
 
     base_output = f"{PROCESSED_DIR}/retrain_v{version}"
-
     folders = [
         f"{base_output}/train/images",
         f"{base_output}/train/labels",
         f"{base_output}/val/images",
         f"{base_output}/val/labels",
     ]
-
+    
+        # Create directories first
     for folder in folders:
         os.makedirs(folder, exist_ok=True)
+        #then create yaml
+    yaml_file = create_dataset_yaml(base_output, version)
 
     all_images = []
+    if not OUTPUT_IMAGES.exists():
+        raise ValueError(f"Images folder missing: {OUTPUT_IMAGES}")
 
-    for file in os.listdir(OUTPUT_IMAGES):
+    for file in os.listdir(str(OUTPUT_IMAGES)):
 
         ext = Path(file).suffix.lower()
 
@@ -242,18 +301,18 @@ def create_dataset(version):
     process(train_files, "train")
     process(val_files, "val")
 
-    create_dataset_yaml(base_output)
+    
 
-    return base_output
+    return base_output, yaml_file
 
 # ==================================================
 # DVC + GIT TAG
 # ==================================================
 
-def dvc_push(version):
+def dvc_push(version, base_output, yaml_file):
 
-    train_folder = f"data/processed/retrain_v{version}/train"
-    yaml_file = f"data/processed/retrain_v{version}/dataset.yaml"
+    base_output = f"data/processed/retrain_v{version}"
+    train_folder = f"{base_output}/train"
 
     current_date = datetime.now().strftime("%Y-%m-%d_%H%M%S")
 
@@ -263,13 +322,13 @@ def dvc_push(version):
 
     # DVC track whole dataset version
     run_cmd(
-    ["dvc", "add", train_folder],
-    "DVC tracking train folder"
+        ["dvc", "add", f"{base_output}/train"],
+        "DVC tracking train"
     )
 
     run_cmd(
-    ["dvc", "add", yaml_file],
-    "DVC tracking dataset yaml"
+        ["dvc", "add", f"{base_output}/val"],
+        "DVC tracking val"
     )
 
     # Stage files
@@ -282,8 +341,8 @@ def dvc_push(version):
     run_cmd([
          
         "git", "add", "-f",
-        f"{yaml_file}",
-    ], "Force staging dataset config")
+        yaml_file,
+    ], "Track dataset yaml")
  
     # Commit
     run_cmd([
@@ -321,7 +380,37 @@ def dvc_push(version):
         "Pushing tag"
     )
 
-    print(f"\n🚀 GitHub Actions triggered with tag: {tag}")
+    try:
+        run_cmd(
+            ["git", "push", "origin", tag],
+            "Pushing tag"
+        )
+
+        conn = sqlite3.connect("users.db", check_same_thread=False)
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "INSERT INTO notifications(message) VALUES (?)",
+            (f" Workflow triggered for {tag}!",)
+        )
+
+        conn.commit()
+        conn.close()
+
+    except Exception as e:
+
+        conn = sqlite3.connect("users.db", check_same_thread=False)
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "INSERT INTO notifications(message) VALUES (?)",
+            (f"⚠️ Workflow failed: {str(e)}",)
+        )
+
+        conn.commit()
+        conn.close()
+
+        raise
 
 # ==================================================
 # CLEAR OUTPUTS
@@ -342,22 +431,52 @@ def clear_outputs():
 # ==================================================
 
 if __name__ == "__main__":
+    remove_duplicates()   # 👈 CLEAN FIRST
+
+    if os.path.exists(LOCK_FILE):
+        print("⚠️ Retraining already running.")
+        exit()
+
+    with open(LOCK_FILE, "w") as f:
+        f.write("running")
+    try:
+        total = count_images()
+
+        if total >= THRESHOLD:
+            version = get_next_version()
+
+            base_output, yaml_file = create_dataset(version)
+
+            dvc_push(version, base_output, yaml_file)
+
+            save_success_version(version)
+
+            clear_outputs()
+
+    finally:
+        if os.path.exists(LOCK_FILE):
+            os.remove(LOCK_FILE)
 
     total = count_images()
 
     print(f"Found {total} images in output folder")
 
     if total >= THRESHOLD:
-
+        clear_outputs()
         version = get_next_version()
+           # MUST be first
+
+        base_output, yaml_file = create_dataset(version)
 
         print(f"\nCreating retrain_v{version}")
 
-        create_dataset(version)
 
-        dvc_push(version)
+        dvc_push(version, base_output, yaml_file)
+        save_success_version(version)   # ✅ ADD THIS LINE
+ 
+        
 
-        clear_outputs()
+        
 
         print(f"\n✅ Dataset v{version} completed")
 

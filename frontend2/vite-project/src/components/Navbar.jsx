@@ -1,16 +1,7 @@
-import { FaCar } from "react-icons/fa";
+import CarDamageDetection from './components/CarDamageDetection';
 
-function Navbar() {
-  return (
-    <div className="navbar">
-      <h2><FaCar /> Car Damage Detection</h2>
-      <div className="nav-buttons">
-        <button>Dashboard</button>
-        <button>History</button>
-        <button>Model</button>
-      </div>
-    </div>
-  );
+function App() {
+  return <CarDamageDetection />;
 }
 
-export default Navbar;
+export default App;

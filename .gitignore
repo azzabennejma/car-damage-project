@@ -33,7 +33,7 @@ dvc-storage/
 
 # Cache
 *.cache
-
+node_modules/
 # Virtual env
 venv/
 __pycache__/
