@@ -89,7 +89,7 @@ jobs:
           echo "=================================="
           echo " Tag   : ${{ github.ref_name }}"
           echo " Device: CPU"
-          echo " Epochs: 5"
+          echo " Epochs: 20"
           echo "=================================="
           cat metrics/results.json
           echo "=================================="
