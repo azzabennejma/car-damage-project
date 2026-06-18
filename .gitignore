@@ -1,36 +1,32 @@
 # Python
 backend/__pycache__/
 backend/venv/
-
 # Model weights
 model/best.pt
 *.pt
-
 # Raw dataset
 data/raw/train/images/
 data/raw/train/labels/
 data/raw/val/
 data/raw/test/
-
 # Outputs
 data/outputs/
 backend/uploads/*
 !backend/uploads/.gitkeep
-
 # Processed datasets
 data/processed/retrain_v*/train/
 data/processed/retrain_v*/val/
-
-# Keep DVC metadata
-!data/processed/*.dvc
-!data/processed/**/dataset.yaml
-
 # Training runs
 runs/
-
 # DVC local storage
 dvc-storage/
-
+# artifacts / training outputs
+runs/
+artifacts/
+results/
+*.png
+*.jpg
+*.csv
 # Cache
 *.cache
 node_modules/
@@ -45,10 +41,6 @@ mlruns/
 mlflow.db
 *.db
 
-# artifacts / training outputs
-runs/
-artifacts/
-results/
-*.png
-*.jpg
-*.csv
+# Keep DVC metadata
+!data/processed/*.dvc
+!data/processed/**/dataset.yaml

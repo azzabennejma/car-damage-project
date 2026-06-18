@@ -3,7 +3,7 @@ last_metrics: {}
 model_version: 0
 train:
   batch_size: 4
-  data_yaml: data/processed/retrain_v1/dataset.yaml
+  data_yaml: data/processed/retrain_v1/dataset_v1.yaml
   epochs: 20
   imgsz: 640
   lr0: 0.001

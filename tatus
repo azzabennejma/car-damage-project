@@ -1,0 +1,100 @@
+[33mbc5e8e9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;33mtag: [m[1;33mv1.0.2[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fix MLflow tracking URI issue
+[33m89b4a27[m[33m ([m[1;33mtag: [m[1;33mv1.0.1[m[33m)[m Fix MLflow tracking URI issue
+[33me75b77f[m[33m ([m[1;33mtag: [m[1;33mdata.v1_2026-06-18_005229_03ec24[m[33m)[m data: retrain_v1
+[33m4e97d6c[m Clean dataset versions and update pipeline
+[33m1eccd07[m Clean dataset versions and update pipeline
+[33m6f4f71d[m Restore model cache
+[33m960d431[m[33m ([m[1;33mtag: [m[1;33mdata.v1_2026-06-17_164500_74354e[m[33m)[m data: retrain_v1
+[33mde33aa2[m[33m ([m[1;33mtag: [m[1;33mdata.v1_2026-06-17_162438_6db34e[m[33m)[m data: retrain_v1
+[33m06904e3[m data: retrain_v7
+[33m98c9ed4[m data: retrain_v6
+[33m0890405[m data: retrain_v5
+[33m3b1266d[m data: retrain_v4
+[33m18294b1[m data: retrain_v3
+[33m5ffb863[m data: retrain_v7
+[33mdf72b1e[m data: retrain_v6
+[33me35e210[m data: retrain_v5
+[33m0831d98[m data: retrain_v4
+[33m3aa0d27[m data: retrain_v3
+[33mdf00760[m data: retrain_v5
+[33m8ceadd6[m data: retrain_v4
+[33m682a5f0[m data: retrain_v3
+[33md62598f[m data: retrain_v3
+[33m009ed42[m ci: metrics after main [skip ci]
+[33m79a814c[m fix deployment workflow
+[33mb475209[m ci: metrics after main [skip ci]
+[33m9c2c9bc[m automated workflow
+[33m0079ed7[m cd: add CD workflow and promotion flag
+[33md0626f7[m ci: mark retrain_vmain as successful [skip ci]
+[33m55fe4d3[m ci: mark retrain_v11 as successful [skip ci]
+[33m216a306[m fix: read MLflow URI from environment variable
+[33m0960009[m feat: add ngrok MLflow tracking for GitHub Actions
+[33mac1c8f9[m MLflow tracking for GitHub Actions
+[33mef7b802[m ci: metrics after data.v3 [skip ci]
+[33m3e41a08[m ci: mark retrain_v3 as successful [skip ci]
+[33mcad624f[m DVC: track val folder for retrain_v1
+[33m174f478[m fix: add mlflow to requirements
+[33m31934bf[m pull data and model
+[33m1024ef3[m pull data and model
+[33m70f1996[m remove mlflow artifacts from tracking
+[33ma93ae03[m test
+[33m5491f68[m data: retrain_v1
+[33med5f63e[m remove dataset yaml from git
+[33me2f1ae9[m data: retrain_v1
+[33m75dd8ae[m test
+[33m199b18e[m data: retrain_v1
+[33ma0d765a[m test
+[33m9b8c4bc[m data: retrain_v2
+[33mca4587d[m test
+[33m66941e7[m data: retrain_v2
+[33m0e16ee8[m fix: clean DVC pipeline migration and dataset versioning
+[33meefca65[m data: retrain_v1
+[33m10af03a[m stop tracking dataset.yaml in git (if you want DVC ownership later)
+[33mf72eb59[m ci: metrics after data.v1_4test [skip ci]
+[33m953f896[m ci: mark retrain_v1 as successful [skip ci]
+[33m104cbd0[m add permission
+[33m42027b6[m test
+[33m9df3f2f[m test
+[33mb63b031[m test
+[33mee4fe1e[m test
+[33m7a6fe78[m track model with dvc
+[33m198a46f[m correction
+[33mb5e948c[m test
+[33m0dc0371[m test
+[33m33eef00[m test
+[33mf09bb4f[m test
+[33mf769949[m add train.yml
+[33mba2303f[m add train.yml
+[33m44933f7[m remove train.yml
+[33md13fb47[m data: retrain_v1
+[33m63c18bc[m data: retrain_v1
+[33m22cfb31[m add dvc install
+[33maba2a30[m data: retrain_v1
+[33mc3c67e5[m fix gitignore for processed datasets
+[33mb1af298[m add dataset success tracking
+[33m85a586b[m remove retrain_v1
+[33mf447ab9[m fix gitignore for processed datasets
+[33m77a2a75[m remove retrain_v1
+[33mb948654[m correct path
+[33m62a1ca5[m add dvc install
+[33md78b241[m change name
+[33mc4bea1d[m add dvc install
+[33m221db17[m add dvc install
+[33mee0f6cb[m add dvc install
+[33m287a932[m add dvc install
+[33m864f5df[m add dvc install
+[33m962052b[m add dvc install
+[33m8652d15[m Add dvc and dvc-azure to requirements
+[33m08e6903[m add dvc install
+[33m4564de4[m add dvc install
+[33m8b51eff[m Fix ci cd
+[33m4349540[m fix pipeline
+[33m0d06eb1[m Dataset version v1
+[33mb481ddc[m Fix train.yml
+[33m15627d5[m data: retrain_v2 on 2026-05-22
+[33mc797d13[m Fix auto_version
+[33m5260c8c[m Fix auto_version
+[33m383bcaf[m Fix auto_version
+[33ma30a00d[m Fix auto_version
+[33m7361b97[m Fix project structure for CI pipeline
+[33m6cd7174[m Clean initial commit (no venv)
