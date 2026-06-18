@@ -59,7 +59,7 @@ else:
 # ==================================================
 # START MLFLOW RUN
 # ==================================================
-mlflow.set_tracking_uri("file:./mlruns")
+mlflow.set_tracking_uri("http://127.0.0.1:4040")
 mlflow.set_experiment("car-damage-detection")
 
 with mlflow.start_run():
