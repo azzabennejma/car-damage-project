@@ -36,13 +36,6 @@ os.makedirs("metrics", exist_ok=True)
 os.makedirs("model_versions", exist_ok=True)
 
 # ==================================================
-# MLFLOW
-# ==================================================
-
-mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "http://127.0.0.1:5000"))
-mlflow.set_experiment("car-damage-detection")
-
-# ==================================================
 # DEVICE
 # ==================================================
 
@@ -66,7 +59,7 @@ else:
 # ==================================================
 # START MLFLOW RUN
 # ==================================================
-mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "http://127.0.0.1:5000"))
+mlflow.set_tracking_uri("file:./mlruns")
 mlflow.set_experiment("car-damage-detection")
 
 with mlflow.start_run():
