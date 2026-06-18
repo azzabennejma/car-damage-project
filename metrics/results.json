@@ -1,9 +1,9 @@
 {
-  "mAP50": 0.823,
-  "mAP50_95": 0.7107,
-  "precision": 0.7777,
-  "recall": 0.763,
-  "F1": 0.7702,
+  "mAP50": 0.7925,
+  "mAP50_95": 0.6939,
+  "precision": 0.8456,
+  "recall": 0.6944,
+  "F1": 0.7626,
   "data_version": 1,
   "device": "cpu",
   "epochs": 20
