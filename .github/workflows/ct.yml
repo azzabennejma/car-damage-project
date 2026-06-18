@@ -52,7 +52,7 @@ jobs:
       - name: Set MLflow tracking URI
         run: |
           echo "MLFLOW_TRACKING_URI=${{ secrets.MLFLOW_TRACKING_URI }}" >> $GITHUB_ENV
-      - name: Train model (5 epochs — CPU test)
+      - name: Train model (20 epochs — CPU test)
         run: python src/train.py
 
       - name: Evaluate model
