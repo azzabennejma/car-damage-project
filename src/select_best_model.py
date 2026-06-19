@@ -44,7 +44,7 @@ if os.path.exists(BEST_SCORE_FILE):
 
 else:
 
-    best_map = 0.73
+    best_map = 0.74
 
 print(f"Production mAP50 : {best_map}")
 print(f"Candidate  mAP50 : {new_map}")
