@@ -2,6 +2,7 @@ name: CT — Retrain on New Data Version
 
 
 on:
+  workflow_dispatch:
   repository_dispatch:
     types: [start_ct]
       
