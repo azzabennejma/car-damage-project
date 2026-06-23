@@ -1,9 +1,10 @@
 name: CD — Deploy New Model
 
 on:
+  workflow_dispatch:
   repository_dispatch:
     types: [deploy_model]
-  workflow_dispatch:
+ 
 
 jobs:
   deploy:
@@ -27,8 +28,8 @@ jobs:
         run: |
           python -m dvc remote modify --local azure_remote connection_string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
 
-      - name: Pull new model from Azure
-        run: python -m dvc pull models/model/best.pt.dvc -r azure_remote --force
+      - name: Pull all DVC artifacts
+        run: python -m dvc pull -r azure_remote --force
 
       - name: Copy model to backend
         run: cp model/production.pt backend/model/production.pt
