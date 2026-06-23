@@ -27,7 +27,8 @@ jobs:
       - name: Configure DVC remote
         run: |
           python -m dvc remote modify --local azure_remote connection_string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
-
+      - name: Debug files
+        run: ls -R model
       - name: Pull all DVC artifacts
         run: python -m dvc pull -r azure_remote --force
 
@@ -36,8 +37,8 @@ jobs:
 
       - name: Restart Docker containers
         run: |
-          docker-compose down
-          docker-compose up --build -d
+          mkdir -p backend/model
+          cp model/best.pt backend/model/best.pt
 
       - name: Verify deployment
         run: |
