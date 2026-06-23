@@ -1,11 +1,10 @@
-path: data/processed/retrain_v1
+path: .
 
-train: train/images
-val: val/images
-test: test/images
+train: data/processed/retrain_v1/train/images
+val: data/processed/retrain_v1/val/images
+test: data/processed/retrain_v1/test/images
+
 nc: 6
-
-
 names:
   - dent
   - scratch
