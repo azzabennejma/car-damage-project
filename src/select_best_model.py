@@ -2,7 +2,9 @@ import os
 import json
 import yaml
 import mlflow
+import shutil
 
+print("Production model updated")
 # ==================================================
 # LOAD PARAMS
 # ==================================================
@@ -69,15 +71,32 @@ if promoted:
     with open(BEST_SCORE_FILE, "w") as f:
         f.write(str(new_map))
 
-    print(
-        "\nCandidate accepted"
+    shutil.copy(
+        CANDIDATE_MODEL,
+        "model/production.pt"
     )
+    history_file = "metrics/model_history.json"
+
+    if os.path.exists(history_file):
+        with open(history_file) as f:
+            history = json.load(f)
+    else:
+        history = []
+
+    history.append({
+        "batch": f"v{version}",
+        "accuracy": round(new_map * 100, 2)
+    })
+
+    with open(history_file, "w") as f:
+        json.dump(history, f, indent=2)
+
+    print("\nCandidate accepted")
+    print("Production model updated")
 
 else:
 
-    print(
-        "\nCandidate rejected"
-    )
+    print("\nCandidate rejected")
 
 # ==================================================
 # MLFLOW
@@ -92,6 +111,10 @@ mlflow.set_tracking_uri(
 
 mlflow.set_experiment(
     "car-damage-detection"
+)
+mlflow.set_tag(
+    "stage",
+    "deployment"
 )
 
 with mlflow.start_run():

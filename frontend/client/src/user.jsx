@@ -135,10 +135,9 @@ export default function User() {
   const [unreadCount, setUnreadCount] = useState(0);
   const lastNotificationId = useRef(null);
   const datasetInputRef = useRef();
-  
+  const [modelStatus, setModelStatus] = useState("deployed");
   
   const [stats, setStats] = useState(null);
-  const [currentBatch, setCurrentBatch] = useState([]);
 
   const username = localStorage.getItem("username");
   const role = localStorage.getItem("role");
@@ -183,26 +182,7 @@ export default function User() {
             ) / data.detections.length
           : 0;
 
-      setCurrentBatch(prev => {
-        const updated = [...prev, avgConf * 100];
-
-        if (updated.length === 10) {
-          const batchAvg =
-            updated.reduce((a, b) => a + b, 0) / 10;
-
-          setAccuracyHistory(prevHistory => [
-            ...prevHistory,
-            {
-              batch: `${prevHistory.length * 10 + 1}-${prevHistory.length * 10 + 10}`,
-              accuracy: Number(batchAvg.toFixed(1))
-            }
-          ]);
-
-          return [];
-        }
-
-        return updated;
-      });
+      
 
          // 👈 THIS FIXES YOUR UI
       setPredictionCount(prev => prev + 1);
@@ -418,6 +398,11 @@ export default function User() {
       .then(res => res.json())
       .then(data => setDatasetVersions(data))
       .catch(err => console.error(err));
+  }, []);
+  useEffect(() => {
+    fetch("/api/model-status")
+      .then(res => res.json())
+      .then(data => setModelStatus(data.status));
   }, []);
   // ───── FILE HANDLER ─────
   const handleFile = (e) => {

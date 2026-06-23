@@ -10,6 +10,7 @@ from fastapi.responses import RedirectResponse
 from mlflow.tracking import MlflowClient
 from typing import List
 from datetime import datetime
+from flask import jsonify
 
 import sqlite3
 from pydantic import BaseModel
@@ -829,3 +830,10 @@ def get_notifications():
         }
         for r in rows
     ]
+@app.route("/model-history")
+def model_history():
+
+    with open("metrics/model_history.json") as f:
+        history = json.load(f)
+
+    return jsonify(history)
