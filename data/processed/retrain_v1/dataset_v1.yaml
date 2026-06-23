@@ -1,7 +1,8 @@
-path: C:\Users\azzab\Desktop\car_damage_api\data\processed/retrain_v1
+path: data/processed/retrain_v1
 
 train: train/images
 val: val/images
+test: test/images
 
 nc: 6
 
