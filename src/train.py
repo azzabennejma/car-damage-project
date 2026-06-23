@@ -9,6 +9,11 @@ import mlflow
 import mlflow.pytorch
 
 from ultralytics import YOLO
+from ultralytics import settings
+
+settings.update({
+    "datasets_dir": "."
+})
 
 # ==================================================
 # CLEAN MEMORY
