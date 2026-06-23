@@ -1,10 +1,9 @@
 name: CT — Retrain on New Data Version
 
 on:
-  workflow_dispatch:
-  push:
-    tags:
-      - "data.v*"
+  repository_dispatch:
+    types: [start_ct]
+      
 permissions:
   contents: write
   
