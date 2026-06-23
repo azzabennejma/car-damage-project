@@ -28,10 +28,11 @@ jobs:
 
       - name: Run tests
         run: python -m pytest tests/ -v 
-      - name: Trigger CT workflow
+      - name: Trigger deployment
+        if: env.PROMOTED == 'true'
         run: |
           curl -X POST \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             https://api.github.com/repos/${{ github.repository }}/dispatches \
             -d '{"event_type":"start_ct"}'
