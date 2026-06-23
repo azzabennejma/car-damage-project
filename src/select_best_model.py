@@ -116,7 +116,7 @@ mlflow.set_tag(
     "stage",
     "deployment"
 )
-
+mlflow.end_run()
 with mlflow.start_run():
 
     mlflow.log_param(
