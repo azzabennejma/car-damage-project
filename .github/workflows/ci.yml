@@ -28,11 +28,10 @@ jobs:
 
       - name: Run tests
         run: python -m pytest tests/ -v 
-      - name: Trigger CT
+      - name: Trigger CT workflow
         run: |
-          VERSION=$(echo "${GITHUB_REF_NAME}" | sed -E 's/data\.v([0-9]+).*/\1/')
           curl -X POST \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/${{ github.repository }}/dispatches \
-            -d "{\"event_type\":\"start_ct\",\"client_payload\":{\"version\":\"$VERSION\"}}"
+            -d '{"event_type":"start_ct"}'
