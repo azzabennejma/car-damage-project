@@ -3,7 +3,7 @@ name: CI — Tests
 on:
   push:
     tags:
-      - "train.v*"
+      - "data.v*"
 
 jobs:
   test:
@@ -28,13 +28,11 @@ jobs:
 
       - name: Run tests
         run: python -m pytest tests/ -v 
-      - name: Create train tag
+      - name: Trigger CT
         run: |
           VERSION=$(echo "${GITHUB_REF_NAME}" | sed -E 's/data\.v([0-9]+).*/\1/')
-          TAG="train.v${VERSION}_$(date +%Y%m%d%H%M%S)"
-
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-
-          git tag $TAG
-          git push origin $TAG  
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/dispatches \
+            -d "{\"event_type\":\"start_ct\",\"client_payload\":{\"version\":\"$VERSION\"}}"

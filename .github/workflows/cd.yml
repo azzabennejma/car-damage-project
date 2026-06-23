@@ -28,7 +28,7 @@ jobs:
           python -m dvc remote modify --local azure_remote connection_string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
 
       - name: Pull new model from Azure
-        run: python -m dvc pull models/production.pt.dvc -r azure_remote --force
+        run: python -m dvc pull models/model/best.pt.dvc -r azure_remote --force
 
       - name: Copy model to backend
         run: cp model/production.pt backend/model/production.pt
