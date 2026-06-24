@@ -3,9 +3,9 @@ version: "3.9"
 services:
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+  build:
+    context: .
+    dockerfile: backend/Dockerfile
     container_name: car_damage_backend
     ports:
       - "8000:8000"
@@ -19,7 +19,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend2/vite-project
+      context: ./frontend/client
       dockerfile: Dockerfile
     container_name: car_damage_frontend
     ports:
