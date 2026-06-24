@@ -33,8 +33,10 @@ jobs:
         run: python -m dvc pull -r azure_remote --force
 
       - name: Copy model to backend
-        run: mkdir -p backend/model
-             cp model/best.pt backend/model/best.pt
+        run: |
+          mkdir -p backend/model
+          ls -R model
+          cp model/best.pt backend/model/best.pt
 
       - name: Restart Docker containers
         run: |
