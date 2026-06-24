@@ -40,8 +40,8 @@ jobs:
 
       - name: Restart Docker containers
         run: |
-          docker-compose down
-          docker-compose up --build -d
+          docker compose down
+          docker compose up --build -d
 
       - name: Verify deployment
         run: |
