@@ -26,8 +26,7 @@ jobs:
           python -m dvc remote modify --local azure_remote connection_string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
 
       - name: Pull model from Azure
-        run: python -m dvc pull models/model/best.pt.dvc -r azure_remote --force
-
+        run: python -m dvc pull -r azure_remote
       - name: Verify model exists
         run: |
           ls model || true
